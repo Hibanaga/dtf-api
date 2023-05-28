@@ -5,28 +5,19 @@ import { join } from 'path';
 import { PostsModule } from './modules/posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { User } from './models/User';
-import { Post } from './models/Post';
-import { Comment } from './models/Comment';
+import { validate } from './config/env.validation';
+import typeormCliConfig from '../typeorm-cli.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validate,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
-        entities: [User, Post, Comment],
-        logging: true,
-      }),
+      useFactory: () => typeormCliConfig.options,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

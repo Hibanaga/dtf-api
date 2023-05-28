@@ -10,7 +10,7 @@ import {
 import { User } from './User';
 import { Post } from './Post';
 
-@Entity({ name: 'Comment' })
+@Entity({ name: 'comment' })
 export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
