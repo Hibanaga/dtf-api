@@ -17,7 +17,7 @@ export enum Gender {
   Other = 'other',
 }
 
-@Entity({ name: 'user' })
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -32,6 +32,10 @@ export class User {
   deletedAt: Date;
 
   @Index()
+  @Column({ type: 'varchar', name: 'user_name' })
+  userName: string;
+
+  @Index()
   @Column({ type: 'varchar', name: 'first_name' })
   firstName: string;
 
@@ -39,13 +43,13 @@ export class User {
   @Column({ type: 'varchar', name: 'last_name' })
   lastName: string;
 
-  @Column({ type: 'varchar', name: 'image_url' })
-  imageUrl: string;
+  @Column({ type: 'varchar', name: 'image_key' })
+  imageKey: string;
 
   @Column({ type: 'varchar', name: 'gender' })
   gender: Gender;
 
-  @OneToMany(() => Post, (post) => post.post, {
+  @OneToMany(() => Post, (post) => post.user, {
     cascade: true,
     eager: true,
   })

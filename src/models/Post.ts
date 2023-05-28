@@ -11,7 +11,7 @@ import {
 import { User } from './User';
 import { Comment } from './Comment';
 
-@Entity({ name: 'post' })
+@Entity({ name: 'posts' })
 export class Post {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -25,14 +25,17 @@ export class Post {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
 
+  @Column({ type: 'varchar', name: 'image_key' })
+  imageKey: string;
+
   @Column({ type: 'integer', default: 0, name: 'like_count' })
   likeCount: number;
 
   @Column({ type: 'integer', default: 0, name: 'dislike_count' })
   dislikeCount: number;
 
-  @Column({ type: 'varchar', name: 'message' })
-  message: string;
+  @Column({ type: 'varchar', name: 'title' })
+  title: string;
 
   @OneToMany(() => Comment, (comment) => comment.user, {
     cascade: true,
@@ -43,5 +46,5 @@ export class Post {
   @ManyToOne(() => User, (user) => user.posts, {
     onDelete: 'CASCADE',
   })
-  post: Post;
+  user: User;
 }

@@ -3,10 +3,10 @@ import { Gender } from '../../models/User';
 
 export class CreateTableUser1685263615500 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    if (!(await queryRunner.hasTable('user'))) {
+    if (!(await queryRunner.hasTable('users'))) {
       await queryRunner.createTable(
         new Table({
-          name: 'user',
+          name: 'users',
           columns: [
             {
               name: 'id',
@@ -32,6 +32,10 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
               isNullable: true,
             },
             {
+              name: 'user_name',
+              type: 'varchar',
+            },
+            {
               name: 'first_name',
               type: 'varchar',
               isNullable: true,
@@ -42,7 +46,7 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
               isNullable: true,
             },
             {
-              name: 'image_url',
+              name: 'image_key',
               type: 'varchar',
               isNullable: true,
             },
@@ -53,14 +57,24 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
               isNullable: true,
             },
           ],
+          indices: [
+            {
+              name: 'IDX_USER_IDs',
+              columnNames: ['id'],
+            },
+            {
+              name: 'IDX_USER_NAMES',
+              columnNames: ['user_name', 'first_name', 'last_name'],
+            },
+          ],
         }),
       );
     }
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    if (await queryRunner.hasTable('user')) {
-      await queryRunner.dropTable('user');
+    if (await queryRunner.hasTable('users')) {
+      await queryRunner.dropTable('users');
     }
   }
 }
