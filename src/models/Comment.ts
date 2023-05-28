@@ -30,6 +30,9 @@ export class Comment {
   @Column({ type: 'integer', default: 0, name: 'dislike_count' })
   dislikeCount: number;
 
+  @Column({ type: 'varchar', name: 'message' })
+  message: string;
+
   @ManyToOne(() => Post, (user) => user.comments, {
     onDelete: 'CASCADE',
   })
