@@ -31,3 +31,17 @@ But when have situation with some error or you must revert migration you must ru
      yarn migration:revert
 ```
 
+## Authorization
+
+#### headers
+
+```
+    /graphql in HTTP HEADERS
+    
+    {
+      "authorization": "Bearer [ACCESS_TOKEN]"
+    }
+```
+
+in code, in situation when user need guard, need add ```   @UseGuards(GraphqlAuthGuard) ``` to resolver
+
