@@ -1,0 +1,43 @@
+type Comment {
+  id: ID!
+  postId: ID!
+  userId: ID!
+  message: String!
+  likeCount: Int
+  dislikeCount: Int
+}
+
+input CreateCommentInput {
+  id: ID!
+  postId: ID!
+  title: String!
+}
+
+input UpdateCommentInput {
+  id: ID!
+  postId: ID!
+  title: String!
+}
+
+input LikeCommentInput {
+  id: ID!
+  postId: ID!
+}
+
+input DislikeCommentInput {
+  id: ID!
+  postId: ID!
+}
+
+type Query {
+  comments: [Comment]!
+  comment(id: Int!): Comment
+}
+
+type Mutation {
+  createComment(input: CreateCommentInput!): Comment!
+  updateComment(input: UpdateCommentInput!): Comment!
+  likeComment(input: LikeCommentInput!): Boolean
+  dislikeComment(input: DislikeCommentInput!): Boolean
+  removeComment(id: ID!): Comment
+}

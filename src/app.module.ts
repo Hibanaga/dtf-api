@@ -9,6 +9,7 @@ import { validate } from './config/env.validation';
 import { UsersModule } from './modules/users/users.module';
 import typeormCliConfig from '../typeorm-cli.config';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
+import { CommentsModule } from './modules/comments/comments.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
         return graphQLFormattedError;
       },
     }),
+    CommentsModule,
     PostsModule,
     UsersModule,
   ],

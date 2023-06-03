@@ -1,0 +1,44 @@
+type Post {
+  id: ID!
+  title: String!
+  imageKey: String
+  likeCount: Int
+  dislikeCount: Int
+  comments: [Comment]!
+}
+
+input CreatePostInput {
+  userId: ID!
+  title: String!
+  imageKey: String
+}
+
+input UpdatePostInput {
+  id: ID!
+  userId: ID!
+  title: String!
+  imageKey: String
+}
+
+input LikePostInput {
+  id: ID!
+  userId: ID!
+}
+
+input DislikePostInput {
+  id: ID!
+  userId: ID!
+}
+
+type Query {
+  posts: [Post]!
+  post(id: ID!): Post
+}
+
+type Mutation {
+  createPost(input: CreatePostInput!): Post!
+  updatePost(input: UpdatePostInput!): Post!
+  likePost(input: LikePostInput!): Boolean
+  dislikePost(input: DislikePostInput!): Boolean
+  removePost(id: ID!): Post
+}

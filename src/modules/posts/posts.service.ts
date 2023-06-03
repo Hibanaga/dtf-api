@@ -2,48 +2,17 @@ import { Injectable } from '@nestjs/common';
 import {
   CreateCommentInput,
   CreatePostInput,
-  Post,
   UpdatePostInput,
 } from 'src/graphql';
 
-import { v4 } from 'uuid';
-
 @Injectable()
 export class PostsService {
-  private posts: Post[] = [];
+  create(body: CreatePostInput) {}
 
-  create(body: CreatePostInput) {
-    const newPost = {
-      ...body,
-      id: v4(),
-      comments: [],
-    };
-
-    this.posts.push(newPost);
-
-    return newPost;
-  }
-
-  createComment(body: CreateCommentInput) {
-    const post = this.posts.find((post) => post.id === body.postId);
-
-    if (post) {
-      const newComment = {
-        text: body.text,
-        user: body.user,
-        date: new Date().toDateString(),
-      };
-
-      post.comments.push(newComment);
-
-      console.log('newComment: ', newComment);
-
-      return newComment;
-    }
-  }
+  createComment(body: CreateCommentInput) {}
 
   list() {
-    return this.posts;
+    return [];
   }
 
   single(id: number) {

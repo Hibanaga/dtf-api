@@ -18,6 +18,8 @@ type User {
   lastName: String
   imageKey: String
   gender: Gender
+  comments: [Comment]!
+  posts: [Post]!
 }
 
 type JWTTokens {
