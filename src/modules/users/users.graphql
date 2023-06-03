@@ -20,6 +20,11 @@ type User {
   gender: Gender
 }
 
+type JWTTokens {
+    token: String
+    refreshToken: String
+}
+
 input RegisterInput {
     email: String!
     password: String!
@@ -51,7 +56,7 @@ type Query {
 
 type Mutation {
   register(input: RegisterInput!): User!
-  signIn(input: SignInInput!): User!
+  signIn(input: SignInInput!): JWTTokens!
   updateProfile(input: UpdateProfileInput!): User!
   removeUser(id: ID!): User
 }
