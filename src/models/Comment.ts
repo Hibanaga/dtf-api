@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -33,13 +34,21 @@ export class Comment {
   @Column({ type: 'varchar', name: 'message' })
   message: string;
 
+  @Column({ type: 'uuid', nullable: true, name: 'post_id' })
+  postId: string;
+
+  @Column({ type: 'uuid', nullable: true, name: 'user_id' })
+  userId: string;
+
   @ManyToOne(() => Post, (user) => user.comments, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'post_id' })
   post: Post;
 
   @ManyToOne(() => User, (user) => user.comments, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }

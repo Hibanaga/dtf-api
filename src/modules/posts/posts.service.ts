@@ -1,29 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import {
-  CreateCommentInput,
-  CreatePostInput,
-  UpdatePostInput,
-} from 'src/graphql';
+import { CreatePostInput, UpdatePostInput } from 'src/graphql';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Post } from '../../models/Post';
 
 @Injectable()
 export class PostsService {
-  create(body: CreatePostInput) {}
+  constructor(
+    @InjectRepository(Post) private postRepository: Repository<Post>,
+  ) {}
 
-  createComment(body: CreateCommentInput) {}
+  async create(input: CreatePostInput) {
+    return await this.postRepository.save(input);
+  }
 
-  list() {
-    return [];
+  async update(input: UpdatePostInput) {}
+
+  async list() {
+    return await this.postRepository.find();
   }
 
   single(id: number) {
-    return `This action returns a #${id} post`;
-  }
-
-  update(id: number, updatePostInput: UpdatePostInput) {
-    return `This action updates a #${id} post`;
+    return '';
   }
 
   remove(id: number) {
-    return `This action removes a #${id} post`;
+    return '';
   }
 }

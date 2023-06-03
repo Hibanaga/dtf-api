@@ -1,5 +1,6 @@
 type Post {
   id: ID!
+  userId: ID!
   title: String!
   imageKey: String
   likeCount: Int

@@ -17,21 +17,6 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
               isNullable: false,
             },
             {
-              name: 'created_at',
-              type: 'timestamp',
-              default: 'CURRENT_TIMESTAMP',
-            },
-            {
-              name: 'updated_at',
-              type: 'timestamp',
-              default: 'CURRENT_TIMESTAMP',
-            },
-            {
-              name: 'deleted_at',
-              type: 'timestamp',
-              isNullable: true,
-            },
-            {
               name: 'email',
               type: 'varchar',
             },
@@ -62,6 +47,21 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
               name: 'gender',
               type: 'enum',
               enum: [...Object.values(Gender)],
+              isNullable: true,
+            },
+            {
+              name: 'created_at',
+              type: 'timestamp',
+              default: 'CURRENT_TIMESTAMP',
+            },
+            {
+              name: 'updated_at',
+              type: 'timestamp',
+              default: 'CURRENT_TIMESTAMP',
+            },
+            {
+              name: 'deleted_at',
+              type: 'timestamp',
               isNullable: true,
             },
           ],

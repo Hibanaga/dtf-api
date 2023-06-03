@@ -1,6 +1,11 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PostsService } from './posts.service';
-import { CreateCommentInput, CreatePostInput, Post } from 'src/graphql';
+import {
+  CreateCommentInput,
+  CreatePostInput,
+  Post,
+  UpdatePostInput,
+} from 'src/graphql';
 import { UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from '../../authentication/guard/access-token.guard';
 
@@ -8,22 +13,20 @@ import { GraphqlAuthGuard } from '../../authentication/guard/access-token.guard'
 export class PostsResolver {
   constructor(private readonly postsService: PostsService) {}
 
+  // @UseGuards(GraphqlAuthGuard)
   @Mutation('createPost')
-  create(@Args('createPostInput') createPostInput: CreatePostInput) {
-    return this.postsService.create(createPostInput);
+  create(@Args('input') input: CreatePostInput) {
+    return this.postsService.create(input);
   }
 
-  @Mutation('createComment')
-  createComment(
-    @Args('createCommentInput') createCommentInput: CreateCommentInput,
-  ) {
-    return this.postsService.createComment(createCommentInput);
+  @Mutation('updatePost')
+  update(@Args('input') input: UpdatePostInput) {
+    return this.postsService.update(input);
   }
 
-  @UseGuards(GraphqlAuthGuard)
   @Query('posts')
-  list(): Post[] {
-    return this.postsService.list();
+  async list() {
+    return await this.postsService.list();
   }
 
   @Query('post')
@@ -31,6 +34,7 @@ export class PostsResolver {
     return this.postsService.single(id);
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Mutation('removePost')
   remove(@Args('id') id: number) {
     return this.postsService.remove(id);

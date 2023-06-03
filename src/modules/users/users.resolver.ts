@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { RegisterInput, SignInInput } from 'src/graphql';
 
@@ -14,5 +14,10 @@ export class UsersResolver {
   @Mutation('signIn')
   signIn(@Args('input') input: SignInInput) {
     return this.userService.login(input);
+  }
+
+  @Query('user')
+  single(@Args('id') id: string) {
+    return this.userService.single(id);
   }
 }

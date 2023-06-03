@@ -22,6 +22,20 @@ export class CreateCommentsTable1685290015859 implements MigrationInterface {
               isNullable: false,
             },
             {
+              name: 'message',
+              type: 'varchar',
+            },
+            {
+              name: 'like_count',
+              type: 'integer',
+              default: 0,
+            },
+            {
+              name: 'dislike_count',
+              type: 'integer',
+              default: 0,
+            },
+            {
               name: 'created_at',
               type: 'timestamp',
               default: 'CURRENT_TIMESTAMP',
@@ -35,20 +49,6 @@ export class CreateCommentsTable1685290015859 implements MigrationInterface {
               name: 'deleted_at',
               type: 'timestamp',
               isNullable: true,
-            },
-            {
-              name: 'message',
-              type: 'varchar',
-            },
-            {
-              name: 'like_count',
-              type: 'integer',
-              default: 0,
-            },
-            {
-              name: 'dislike_count',
-              type: 'integer',
-              default: 0,
             },
           ],
         }),

@@ -23,21 +23,6 @@ export class CreatePostsTable1685267699325 implements MigrationInterface {
               isNullable: false,
             },
             {
-              name: 'created_at',
-              type: 'timestamp',
-              default: 'CURRENT_TIMESTAMP',
-            },
-            {
-              name: 'updated_at',
-              type: 'timestamp',
-              default: 'CURRENT_TIMESTAMP',
-            },
-            {
-              name: 'deleted_at',
-              type: 'timestamp',
-              isNullable: true,
-            },
-            {
               name: 'like_count',
               type: 'integer',
               default: 0,
@@ -55,6 +40,21 @@ export class CreatePostsTable1685267699325 implements MigrationInterface {
             {
               name: 'title',
               type: 'varchar',
+              isNullable: true,
+            },
+            {
+              name: 'created_at',
+              type: 'timestamp',
+              default: 'CURRENT_TIMESTAMP',
+            },
+            {
+              name: 'updated_at',
+              type: 'timestamp',
+              default: 'CURRENT_TIMESTAMP',
+            },
+            {
+              name: 'deleted_at',
+              type: 'timestamp',
               isNullable: true,
             },
           ],

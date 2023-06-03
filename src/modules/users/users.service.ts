@@ -60,6 +60,12 @@ export class UsersService {
     return this.getTokens(user);
   }
 
+  async single(id: string) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+    });
+  }
+
   async getTokens(user: User): Promise<JWTTokens> {
     const [token, refreshToken] = await Promise.all([
       this.jwtService.signAsync(

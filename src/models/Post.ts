@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './User';
 import { Comment } from './Comment';
@@ -37,6 +38,9 @@ export class Post {
   @Column({ type: 'varchar', name: 'title' })
   title: string;
 
+  @Column({ type: 'uuid', nullable: true, name: 'user_id' })
+  userId: string;
+
   @OneToMany(() => Comment, (comment) => comment.user, {
     cascade: true,
     eager: true,
@@ -46,5 +50,6 @@ export class Post {
   @ManyToOne(() => User, (user) => user.posts, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }
