@@ -24,6 +24,7 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       typePaths: ['./**/*.graphql'],
+      context: ({ req }) => ({ req }),
       definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
         outputAs: 'class',

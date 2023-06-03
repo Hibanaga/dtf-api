@@ -1,6 +1,8 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PostsService } from './posts.service';
 import { CreateCommentInput, CreatePostInput, Post } from 'src/graphql';
+import { UseGuards } from '@nestjs/common';
+import { GraphqlAuthGuard } from '../../authentication/guard/access-token.guard';
 
 @Resolver('Post')
 export class PostsResolver {
@@ -18,6 +20,7 @@ export class PostsResolver {
     return this.postsService.createComment(createCommentInput);
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Query('posts')
   list(): Post[] {
     return this.postsService.list();
