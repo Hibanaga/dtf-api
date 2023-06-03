@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validate } from './config/env.validation';
 import { UsersModule } from './modules/users/users.module';
 import typeormCliConfig from '../typeorm-cli.config';
+import { GraphQLError, GraphQLFormattedError } from 'graphql';
 
 @Module({
   imports: [
@@ -28,6 +29,12 @@ import typeormCliConfig from '../typeorm-cli.config';
         outputAs: 'class',
       },
       playground: true,
+      formatError: (error: GraphQLError) => {
+        const graphQLFormattedError: GraphQLFormattedError = {
+          message: error.message,
+        };
+        return graphQLFormattedError;
+      },
     }),
     PostsModule,
     UsersModule,

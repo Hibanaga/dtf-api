@@ -6,8 +6,8 @@ import { RegisterInput } from 'src/graphql';
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  @Mutation('registerUser')
-  register(@Args('registerUserInput') registerUserInput: RegisterInput) {
-    return this.usersService.register(registerUserInput);
+  @Mutation('register')
+  register(@Args('input') input: RegisterInput) {
+    return this.usersService.register(input);
   }
 }

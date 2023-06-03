@@ -50,8 +50,8 @@ type Query {
 }
 
 type Mutation {
-  registerUser(registerUserInput: RegisterInput!): User!
-  signInUser(signInUserInput: SignInInput!): User!
-  updateUser(updateUserInput: UpdateProfileInput!): User!
+  register(input: RegisterInput!): User!
+  signIn(input: SignInInput!): User!
+  updateProfile(input: UpdateProfileInput!): User!
   removeUser(id: ID!): User
 }
