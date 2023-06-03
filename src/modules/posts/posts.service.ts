@@ -49,19 +49,16 @@ export class PostsService {
 
   async update(input: UpdatePostInput) {
     try {
-      const { id, userId, ...body } = input;
-
-      const isExistUser = await this.userRepository.exist({
-        where: {
-          id: userId,
-        },
+      const isUserExists = await this.userRepository.exist({
+        where: { id: input.userId },
       });
 
-      if (!isExistUser) {
+      if (!isUserExists) {
         throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
       }
 
-      return await this.postRepository.update(id, body);
+      await this.postRepository.update(input.id, input);
+      return await this.postRepository.findOne({ where: { id: input.id } });
     } catch (e) {
       return e;
     }
@@ -71,7 +68,8 @@ export class PostsService {
     try {
       const post = await this.postRepository.findOne({
         where: {
-          id: input.userId,
+          id: input.id,
+          userId: input.userId,
         },
       });
 
@@ -81,7 +79,6 @@ export class PostsService {
 
       const { id, ...postParams } = post;
       return await this.postRepository.update(id, {
-        ...postParams,
         likeCount: postParams.likeCount + 1,
       });
     } catch (e) {

@@ -59,11 +59,6 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
               type: 'timestamp',
               default: 'CURRENT_TIMESTAMP',
             },
-            {
-              name: 'deleted_at',
-              type: 'timestamp',
-              isNullable: true,
-            },
           ],
           indices: [
             {

@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Post } from './Post';
 import { Comment } from './Comment';
+import { PostActivity } from './PostActivity';
 
 export enum Gender {
   Men = 'men',
@@ -27,9 +28,6 @@ export class User {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
 
   @Index()
   @Column({ type: 'varchar', name: 'email' })
@@ -68,4 +66,10 @@ export class User {
     eager: true,
   })
   comments: Comment[];
+
+  @OneToMany(() => PostActivity, (postActivity) => postActivity.user, {
+    cascade: true,
+    eager: true,
+  })
+  postActivities: PostActivity[];
 }

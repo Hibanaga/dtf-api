@@ -52,11 +52,6 @@ export class CreatePostsTable1685267699325 implements MigrationInterface {
               type: 'timestamp',
               default: 'CURRENT_TIMESTAMP',
             },
-            {
-              name: 'deleted_at',
-              type: 'timestamp',
-              isNullable: true,
-            },
           ],
           indices: [
             {

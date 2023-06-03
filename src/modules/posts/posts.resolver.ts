@@ -19,19 +19,17 @@ export class PostsResolver {
     return this.postsService.create(input);
   }
 
-  @UseGuards(GraphqlAuthGuard)
+  // @UseGuards(GraphqlAuthGuard)
   @Mutation('updatePost')
   update(@Args('input') input: UpdatePostInput) {
     return this.postsService.update(input);
   }
 
-  @UseGuards(GraphqlAuthGuard)
   @Mutation('likePost')
   likePost(@Args('input') input: LikePostInput) {
     return this.postsService.likePost(input);
   }
 
-  @UseGuards(GraphqlAuthGuard)
   @Mutation('dislikePost')
   dislikePost(@Args('input') input: DislikePostInput) {
     return this.postsService.dislikePost(input);

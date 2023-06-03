@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { User } from './User';
 import { Comment } from './Comment';
+import { PostActivity } from './PostActivity';
 
 @Entity({ name: 'posts' })
 export class Post {
@@ -22,9 +23,6 @@ export class Post {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-  deletedAt?: Date;
 
   @Column({ type: 'varchar', name: 'image_key', nullable: true })
   imageKey?: string;
@@ -52,4 +50,10 @@ export class Post {
   })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToMany(() => PostActivity, (postActivity) => postActivity.post, {
+    cascade: true,
+    eager: true,
+  })
+  postActivities: PostActivity[];
 }
