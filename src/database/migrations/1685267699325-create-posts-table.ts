@@ -80,6 +80,7 @@ export class CreatePostsTable1685267699325 implements MigrationInterface {
         new TableColumn({
           name: 'user_id',
           type: 'uuid',
+          isNullable: true,
         }),
       );
 

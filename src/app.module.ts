@@ -6,6 +6,7 @@ import { PostsModule } from './modules/posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validate } from './config/env.validation';
+import { UsersModule } from './modules/users/users.module';
 import typeormCliConfig from '../typeorm-cli.config';
 
 @Module({
@@ -29,6 +30,7 @@ import typeormCliConfig from '../typeorm-cli.config';
       playground: true,
     }),
     PostsModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

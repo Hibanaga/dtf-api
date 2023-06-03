@@ -32,6 +32,14 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
               isNullable: true,
             },
             {
+              name: 'email',
+              type: 'varchar',
+            },
+            {
+              name: 'password',
+              type: 'varchar',
+            },
+            {
               name: 'user_name',
               type: 'varchar',
             },
@@ -64,7 +72,7 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
             },
             {
               name: 'IDX_USER_NAMES',
-              columnNames: ['user_name', 'first_name', 'last_name'],
+              columnNames: ['email', 'user_name', 'first_name', 'last_name'],
             },
           ],
         }),

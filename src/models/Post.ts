@@ -22,11 +22,11 @@ export class Post {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
 
-  @Column({ type: 'varchar', name: 'image_key' })
-  imageKey: string;
+  @Column({ type: 'varchar', name: 'image_key', nullable: true })
+  imageKey?: string;
 
   @Column({ type: 'integer', default: 0, name: 'like_count' })
   likeCount: number;

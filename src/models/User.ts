@@ -32,22 +32,30 @@ export class User {
   deletedAt: Date;
 
   @Index()
+  @Column({ type: 'varchar', name: 'email' })
+  email: string;
+
+  @Index()
+  @Column({ type: 'varchar', name: 'password' })
+  password: string;
+
+  @Index()
   @Column({ type: 'varchar', name: 'user_name' })
-  userName: string;
+  userName?: string;
 
   @Index()
-  @Column({ type: 'varchar', name: 'first_name' })
-  firstName: string;
+  @Column({ type: 'varchar', name: 'first_name', nullable: true })
+  firstName?: string;
 
   @Index()
-  @Column({ type: 'varchar', name: 'last_name' })
-  lastName: string;
+  @Column({ type: 'varchar', name: 'last_name', nullable: true })
+  lastName?: string;
 
-  @Column({ type: 'varchar', name: 'image_key' })
-  imageKey: string;
+  @Column({ type: 'varchar', name: 'image_key', nullable: true })
+  imageKey?: string;
 
-  @Column({ type: 'varchar', name: 'gender' })
-  gender: Gender;
+  @Column({ type: 'varchar', name: 'gender', nullable: true })
+  gender?: Gender;
 
   @OneToMany(() => Post, (post) => post.user, {
     cascade: true,

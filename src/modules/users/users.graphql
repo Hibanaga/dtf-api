@@ -1,0 +1,57 @@
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+scalar DateTime
+
+type User {
+  id: ID!
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  email: String!
+  password: String!
+  userName: String
+  firstName: String
+  lastName: String
+  imageKey: String
+  gender: Gender
+}
+
+input RegisterInput {
+    email: String!
+    password: String!
+    userName: String!
+    firstName: String
+    lastName: String
+    imageKey: String
+    gender: Gender
+}
+
+input SignInInput {
+    email: String!
+    password: String!
+}
+
+input UpdateProfileInput {
+  id: ID!
+  userName: String
+  firstName: String
+  lastName: String
+  imageKey: String
+  gender: Gender
+}
+
+type Query {
+  users: [User]!
+  user(id: ID!): User
+}
+
+type Mutation {
+  registerUser(registerUserInput: RegisterInput!): User!
+  signInUser(signInUserInput: SignInInput!): User!
+  updateUser(updateUserInput: UpdateProfileInput!): User!
+  removeUser(id: ID!): User
+}

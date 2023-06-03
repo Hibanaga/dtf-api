@@ -19,6 +19,7 @@ export default new DataSource({
   password: configService.get<string>('DB_PASSWORD'),
   database: configService.get<string>('DB_NAME'),
   logging: configService.get<boolean>('DB_LOGGING'),
+  synchronize: configService.get<boolean>('DB_SYNCHRONIZE'),
   entities: [baseFolder() + '/src/models/**/*{.ts,.js}'],
   migrations: [baseFolder() + '/src/database/migrations/**/*{.ts,.js}'],
 });
