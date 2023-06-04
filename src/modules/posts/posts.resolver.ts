@@ -1,53 +1,44 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PostsService } from './posts.service';
-import {
-  CreatePostInput,
-  DislikePostInput,
-  LikePostInput,
-  UpdatePostInput,
-} from 'src/graphql';
+import { CreatePostInput, LikeUnlikeInput, UpdatePostInput } from 'src/graphql';
 import { UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from '../../authentication/guard/access-token.guard';
+import { Post } from '../../models/Post';
 
 @Resolver('Post')
 export class PostsResolver {
   constructor(private readonly postsService: PostsService) {}
 
-  @UseGuards(GraphqlAuthGuard)
   @Mutation('createPost')
-  create(@Args('input') input: CreatePostInput) {
-    return this.postsService.create(input);
+  async create(@Args('input') input: CreatePostInput): Promise<Post> {
+    return await this.postsService.create(input);
   }
 
-  // @UseGuards(GraphqlAuthGuard)
   @Mutation('updatePost')
-  update(@Args('input') input: UpdatePostInput) {
-    return this.postsService.update(input);
+  async update(@Args('input') input: UpdatePostInput): Promise<Post> {
+    return await this.postsService.update(input);
   }
 
-  @Mutation('likePost')
-  likePost(@Args('input') input: LikePostInput) {
-    return this.postsService.likePost(input);
-  }
-
-  @Mutation('dislikePost')
-  dislikePost(@Args('input') input: DislikePostInput) {
-    return this.postsService.dislikePost(input);
+  @Mutation('')
+  async likeUnlikePost(
+    @Args('input') input: LikeUnlikeInput,
+  ): Promise<boolean> {
+    return await this.postsService.likeUnlike(input);
   }
 
   @Query('posts')
-  async list() {
+  async list(): Promise<Post[]> {
     return await this.postsService.list();
   }
 
   @Query('post')
-  single(@Args('id') id: string) {
-    return this.postsService.single(id);
+  async single(@Args('id') id: string): Promise<Post> {
+    return await this.postsService.single(id);
   }
 
   @UseGuards(GraphqlAuthGuard)
   @Mutation('removePost')
-  remove(@Args('id') id: string) {
-    return this.postsService.remove(id);
+  async remove(@Args('id') id: string): Promise<Post> {
+    return await this.postsService.remove(id);
   }
 }

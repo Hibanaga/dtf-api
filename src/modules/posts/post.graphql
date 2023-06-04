@@ -1,3 +1,8 @@
+enum ReactionType {
+  like
+  dislike
+}
+
 type Post {
   id: ID!
   userId: ID!
@@ -21,14 +26,10 @@ input UpdatePostInput {
   imageKey: String
 }
 
-input LikePostInput {
+input LikeUnlikeInput {
   id: ID!
   userId: ID!
-}
-
-input DislikePostInput {
-  id: ID!
-  userId: ID!
+  reactionType: ReactionType!
 }
 
 type Query {
@@ -39,7 +40,6 @@ type Query {
 type Mutation {
   createPost(input: CreatePostInput!): Post!
   updatePost(input: UpdatePostInput!): Post!
-  likePost(input: LikePostInput!): Boolean
-  dislikePost(input: DislikePostInput!): Boolean
+  likeUnlikePost(input: LikeUnlikeInput!): Boolean
   removePost(id: ID!): Post
 }

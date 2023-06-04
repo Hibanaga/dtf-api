@@ -1,18 +1,26 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import {
   CreatePostInput,
-  DislikePostInput,
-  LikePostInput,
+  LikeUnlikeInput,
+  ReactionType as GraphqlReactionType,
   UpdatePostInput,
 } from 'src/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from '../../models/Post';
 import { User } from '../../models/User';
+import { PostActivity, ReactionType } from '../../models/PostActivity';
+
+export enum ReactionTypeCountParams {
+  LikeCount = 'likeCount',
+  DislikeCount = 'dislikeCount',
+}
 
 @Injectable()
 export class PostsService {
   constructor(
+    @InjectRepository(PostActivity)
+    private postActivityRepository: Repository<PostActivity>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Post) private postRepository: Repository<Post>,
   ) {}
@@ -31,11 +39,7 @@ export class PostsService {
 
   async create(input: CreatePostInput) {
     try {
-      const isExistUser = await this.userRepository.exist({
-        where: {
-          id: input.userId,
-        },
-      });
+      const isExistUser = await this.checkUserExists(input.userId);
 
       if (!isExistUser) {
         throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
@@ -49,9 +53,7 @@ export class PostsService {
 
   async update(input: UpdatePostInput) {
     try {
-      const isUserExists = await this.userRepository.exist({
-        where: { id: input.userId },
-      });
+      const isUserExists = await this.checkUserExists(input.userId);
 
       if (!isUserExists) {
         throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
@@ -59,50 +61,6 @@ export class PostsService {
 
       await this.postRepository.update(input.id, input);
       return await this.postRepository.findOne({ where: { id: input.id } });
-    } catch (e) {
-      return e;
-    }
-  }
-
-  async likePost(input: LikePostInput) {
-    try {
-      const post = await this.postRepository.findOne({
-        where: {
-          id: input.id,
-          userId: input.userId,
-        },
-      });
-
-      if (!post) {
-        throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
-      }
-
-      const { id, ...postParams } = post;
-      return await this.postRepository.update(id, {
-        likeCount: postParams.likeCount + 1,
-      });
-    } catch (e) {
-      return e;
-    }
-  }
-
-  async dislikePost(input: DislikePostInput) {
-    try {
-      const post = await this.postRepository.findOne({
-        where: {
-          id: input.userId,
-        },
-      });
-
-      if (!post) {
-        throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
-      }
-
-      const { id, ...postParams } = post;
-      return await this.postRepository.update(id, {
-        ...postParams,
-        dislikeCount: postParams.dislikeCount + 1,
-      });
     } catch (e) {
       return e;
     }
@@ -124,5 +82,137 @@ export class PostsService {
     } catch (e) {
       return e;
     }
+  }
+
+  async likeUnlike(input: LikeUnlikeInput) {
+    const ideticationParams = { postId: input.id, userId: input.userId };
+
+    try {
+      const post = await this.postRepository.findOne({
+        where: {
+          id: input.id,
+          userId: input.userId,
+        },
+      });
+
+      if (!post) {
+        throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
+      }
+
+      const postActivity = await this.postActivityRepository.findOne({
+        where: ideticationParams,
+      });
+
+      if (!postActivity) {
+        const likedUnlikePost = await this.postActivityRepository.save({
+          ...ideticationParams,
+          reactionType:
+            input.reactionType === GraphqlReactionType.like
+              ? ReactionType.Like
+              : ReactionType.Dislike,
+        });
+
+        if (!likedUnlikePost) {
+          throw new HttpException(
+            'Something went wrong!',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        return !!(await this.postRepository.update(input.id, {
+          likeCount:
+            likedUnlikePost.reactionType === ReactionType.Like
+              ? post.likeCount + 1
+              : post.likeCount,
+          dislikeCount:
+            likedUnlikePost.reactionType === ReactionType.Dislike
+              ? post.dislikeCount + 1
+              : post.dislikeCount,
+        }));
+      }
+
+      if (
+        postActivity.reactionType === ReactionType.Like &&
+        input.reactionType === GraphqlReactionType.like
+      ) {
+        return await this.likeUnlikeDuplicates(
+          postActivity,
+          post,
+          input.id,
+          ReactionTypeCountParams.LikeCount,
+        );
+      }
+
+      if (
+        postActivity.reactionType === ReactionType.Dislike &&
+        input.reactionType === GraphqlReactionType.dislike
+      ) {
+        return await this.likeUnlikeDuplicates(
+          postActivity,
+          post,
+          input.id,
+          ReactionTypeCountParams.DislikeCount,
+        );
+      }
+
+      if (postActivity) {
+        const likedUnlikePost = await this.postActivityRepository.update(
+          ideticationParams,
+          {
+            reactionType:
+              input.reactionType === GraphqlReactionType.like
+                ? ReactionType.Like
+                : ReactionType.Dislike,
+          },
+        );
+
+        if (!likedUnlikePost) {
+          throw new HttpException(
+            'Something went wrong!',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        return !!(await this.postRepository.update(input.id, {
+          likeCount:
+            input.reactionType === GraphqlReactionType.like
+              ? post.likeCount + 1
+              : post.likeCount - 1,
+          dislikeCount:
+            input.reactionType === GraphqlReactionType.dislike
+              ? post.dislikeCount + 1
+              : post.dislikeCount - 1,
+        }));
+      }
+
+      throw new HttpException('Something went wrong!', HttpStatus.BAD_REQUEST);
+    } catch (e) {
+      return e;
+    }
+  }
+
+  async checkUserExists(userId: string): Promise<boolean> {
+    return await this.userRepository.exist({
+      where: { id: userId },
+    });
+  }
+
+  async likeUnlikeDuplicates(
+    postActivity: PostActivity,
+    post: Post,
+    postId: string,
+    reactionType: ReactionTypeCountParams,
+  ) {
+    const removeLike = await this.postActivityRepository.remove(postActivity);
+
+    if (!removeLike) {
+      throw new HttpException('Something went wrong!', HttpStatus.BAD_REQUEST);
+    }
+
+    const status = await this.postRepository.update(postId, {
+      [reactionType]: post[reactionType] - 1,
+    });
+
+    return !!status;
   }
 }
