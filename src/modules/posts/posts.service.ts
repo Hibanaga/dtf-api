@@ -29,11 +29,9 @@ export class PostsService {
     return await this.postRepository.find();
   }
 
-  single(id: string) {
-    return this.postRepository.findOne({
-      where: {
-        id: id,
-      },
+  async single(id: string) {
+    return await this.postRepository.findOne({
+      where: { id: id },
     });
   }
 
@@ -60,7 +58,7 @@ export class PostsService {
       }
 
       await this.postRepository.update(input.id, input);
-      return await this.postRepository.findOne({ where: { id: input.id } });
+      return await this.single(input.id);
     } catch (e) {
       return e;
     }
@@ -68,11 +66,7 @@ export class PostsService {
 
   async remove(id: string) {
     try {
-      const post = await this.postRepository.findOne({
-        where: {
-          id,
-        },
-      });
+      const post = await this.single(id);
 
       if (!post) {
         throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
@@ -95,6 +89,11 @@ export class PostsService {
         },
       });
 
+      const reactTypeCondition =
+        input.reactionType === GraphqlReactionType.like
+          ? ReactionType.Like
+          : ReactionType.Dislike;
+
       if (!post) {
         throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
       }
@@ -106,10 +105,7 @@ export class PostsService {
       if (!postActivity) {
         const likedUnlikePost = await this.postActivityRepository.save({
           ...ideticationParams,
-          reactionType:
-            input.reactionType === GraphqlReactionType.like
-              ? ReactionType.Like
-              : ReactionType.Dislike,
+          reactionType: reactTypeCondition,
         });
 
         if (!likedUnlikePost) {
@@ -158,12 +154,7 @@ export class PostsService {
       if (postActivity) {
         const likedUnlikePost = await this.postActivityRepository.update(
           ideticationParams,
-          {
-            reactionType:
-              input.reactionType === GraphqlReactionType.like
-                ? ReactionType.Like
-                : ReactionType.Dislike,
-          },
+          { reactionType: reactTypeCondition },
         );
 
         if (!likedUnlikePost) {
