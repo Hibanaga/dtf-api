@@ -11,6 +11,7 @@ import {
 import { Post } from './Post';
 import { Comment } from './Comment';
 import { PostActivity } from './PostActivity';
+import { CommentActivity } from './CommentActivity';
 
 export enum Gender {
   Men = 'men',
@@ -72,4 +73,10 @@ export class User {
     eager: true,
   })
   postActivities: PostActivity[];
+
+  @OneToMany(() => CommentActivity, (commentActivity) => commentActivity.user, {
+    cascade: true,
+    eager: true,
+  })
+  commentActivities: CommentActivity[];
 }

@@ -1,15 +1,16 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './User';
 import { Post } from './Post';
+import { CommentActivity } from './CommentActivity';
 
 @Entity({ name: 'comments' })
 export class Comment {
@@ -48,4 +49,14 @@ export class Comment {
   })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToMany(
+    () => CommentActivity,
+    (commentActivity) => commentActivity.comment,
+    {
+      cascade: true,
+      eager: true,
+    },
+  )
+  commentActivities: CommentActivity[];
 }

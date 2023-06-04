@@ -12,6 +12,7 @@ import {
 import { User } from './User';
 import { Comment } from './Comment';
 import { PostActivity } from './PostActivity';
+import { CommentActivity } from './CommentActivity';
 
 @Entity({ name: 'posts' })
 export class Post {
@@ -56,4 +57,10 @@ export class Post {
     eager: true,
   })
   postActivities: PostActivity[];
+
+  @OneToMany(() => CommentActivity, (commentActivity) => commentActivity.post, {
+    cascade: true,
+    eager: true,
+  })
+  commentActivities: CommentActivity[];
 }

@@ -39,8 +39,10 @@ export class CommentsService {
   }
 
   async update(input: UpdateCommentInput) {
-    return await this.single(input.id);
+    try {
+      return await this.single(input.id);
+    } catch (e) {
+      return e;
+    }
   }
-
-  async likeUnlike(input: LikeUnlikeCommentInput) {}
 }
