@@ -8,7 +8,6 @@ type Comment {
 }
 
 input CreateCommentInput {
-  id: ID!
   userId: ID!
   postId: ID
   message: String!
