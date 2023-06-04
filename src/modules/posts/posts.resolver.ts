@@ -1,6 +1,10 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PostsService } from './posts.service';
-import { CreatePostInput, LikeUnlikeInput, UpdatePostInput } from 'src/graphql';
+import {
+  CreatePostInput,
+  LikeUnlikePostInput,
+  UpdatePostInput,
+} from 'src/graphql';
 import { UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from '../../authentication/guard/access-token.guard';
 import { Post } from '../../models/Post';
@@ -19,9 +23,9 @@ export class PostsResolver {
     return await this.postsService.update(input);
   }
 
-  @Mutation('')
-  async likeUnlikePost(
-    @Args('input') input: LikeUnlikeInput,
+  @Mutation('likeUnlikePost')
+  async likeUnlike(
+    @Args('input') input: LikeUnlikePostInput,
   ): Promise<boolean> {
     return await this.postsService.likeUnlike(input);
   }

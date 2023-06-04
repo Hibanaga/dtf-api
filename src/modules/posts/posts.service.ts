@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import {
   CreatePostInput,
-  LikeUnlikeInput,
+  LikeUnlikePostInput,
   ReactionType as GraphqlReactionType,
   UpdatePostInput,
 } from 'src/graphql';
@@ -78,7 +78,7 @@ export class PostsService {
     }
   }
 
-  async likeUnlike(input: LikeUnlikeInput) {
+  async likeUnlike(input: LikeUnlikePostInput) {
     const ideticationParams = { postId: input.id, userId: input.userId };
 
     try {

@@ -9,35 +9,32 @@ type Comment {
 
 input CreateCommentInput {
   id: ID!
-  postId: ID!
-  title: String!
+  userId: ID!
+  postId: ID
+  message: String!
 }
 
 input UpdateCommentInput {
   id: ID!
-  postId: ID!
-  title: String!
+  userId: ID!
+  postId: ID
+  message: String!
 }
 
-input LikeCommentInput {
+input LikeUnlikeCommentInput {
   id: ID!
   postId: ID!
-}
-
-input DislikeCommentInput {
-  id: ID!
-  postId: ID!
+  userId: ID!
 }
 
 type Query {
   comments: [Comment]!
-  comment(id: Int!): Comment
+  comment(id: ID!): Comment
 }
 
 type Mutation {
   createComment(input: CreateCommentInput!): Comment!
   updateComment(input: UpdateCommentInput!): Comment!
-  likeComment(input: LikeCommentInput!): Boolean
-  dislikeComment(input: DislikeCommentInput!): Boolean
+  likeUnlikeComment(input: LikeUnlikeCommentInput!): Boolean
   removeComment(id: ID!): Comment
 }

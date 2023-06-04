@@ -26,7 +26,7 @@ input UpdatePostInput {
   imageKey: String
 }
 
-input LikeUnlikeInput {
+input LikeUnlikePostInput {
   id: ID!
   userId: ID!
   reactionType: ReactionType!
@@ -40,6 +40,6 @@ type Query {
 type Mutation {
   createPost(input: CreatePostInput!): Post!
   updatePost(input: UpdatePostInput!): Post!
-  likeUnlikePost(input: LikeUnlikeInput!): Boolean
+  likeUnlikePost(input: LikeUnlikePostInput!): Boolean
   removePost(id: ID!): Post
 }
