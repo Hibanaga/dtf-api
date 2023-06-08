@@ -1,6 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CommentsService } from './comments.service';
-import { CreateCommentInput, UpdateCommentInput } from '../../graphql';
+import {
+  CreateCommentInput,
+  LikeUnlikeCommentInput,
+  UpdateCommentInput,
+} from '../../graphql';
 import { Comment } from '../../models/Comment';
 
 @Resolver('Comment')
@@ -25,5 +29,17 @@ export class CommentsResolver {
   @Mutation('updateComment')
   async update(@Args('input') input: UpdateCommentInput): Promise<Comment> {
     return await this.commentsService.update(input);
+  }
+
+  @Mutation('removeComment')
+  async remove(@Args('id') id: string): Promise<boolean> {
+    return await this.commentsService.remove(id);
+  }
+
+  @Mutation('likeUnlikeComment')
+  async likeUnlike(
+    @Args('input') input: LikeUnlikeCommentInput,
+  ): Promise<boolean> {
+    return await this.commentsService.likeUnlike(input);
   }
 }

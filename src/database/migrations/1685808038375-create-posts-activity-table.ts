@@ -5,7 +5,7 @@ import {
   TableColumn,
   TableForeignKey,
 } from 'typeorm';
-import { ReactionType } from '../../models/PostActivity';
+import { ReactionType } from 'src/types/ActivityStatus';
 
 export class CreatePostsActivityTable1685808038375
   implements MigrationInterface

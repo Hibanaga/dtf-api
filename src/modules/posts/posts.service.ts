@@ -9,7 +9,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from '../../models/Post';
 import { User } from '../../models/User';
-import { PostActivity, ReactionType } from '../../models/PostActivity';
+import { PostActivity } from '../../models/PostActivity';
+import { ReactionType } from '../../types/ActivityStatus';
 
 export enum ReactionTypeCountParams {
   LikeCount = 'likeCount',
@@ -79,12 +80,12 @@ export class PostsService {
   }
 
   async likeUnlike(input: LikeUnlikePostInput) {
-    const ideticationParams = { postId: input.id, userId: input.userId };
+    const ideticationParams = { postId: input.postId, userId: input.userId };
 
     try {
       const post = await this.postRepository.findOne({
         where: {
-          id: input.id,
+          id: input.postId,
           userId: input.userId,
         },
       });
@@ -115,7 +116,7 @@ export class PostsService {
           );
         }
 
-        return !!(await this.postRepository.update(input.id, {
+        return !!(await this.postRepository.update(input.postId, {
           likeCount:
             likedUnlikePost.reactionType === ReactionType.Like
               ? post.likeCount + 1
@@ -134,7 +135,7 @@ export class PostsService {
         return await this.likeUnlikeDuplicates(
           postActivity,
           post,
-          input.id,
+          input.postId,
           ReactionTypeCountParams.LikeCount,
         );
       }
@@ -146,7 +147,7 @@ export class PostsService {
         return await this.likeUnlikeDuplicates(
           postActivity,
           post,
-          input.id,
+          input.postId,
           ReactionTypeCountParams.DislikeCount,
         );
       }
@@ -164,7 +165,7 @@ export class PostsService {
           );
         }
 
-        return !!(await this.postRepository.update(input.id, {
+        return !!(await this.postRepository.update(input.postId, {
           likeCount:
             input.reactionType === GraphqlReactionType.like
               ? post.likeCount + 1

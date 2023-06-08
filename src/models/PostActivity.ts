@@ -10,13 +10,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from './User';
-import { Comment } from './Comment';
 import { Post } from './Post';
-
-export enum ReactionType {
-  Like = 'like',
-  Dislike = 'dislike',
-}
+import { ReactionType } from 'src/types/ActivityStatus';
 
 @Entity({ name: 'post_activities_indexes' })
 export class PostActivity {

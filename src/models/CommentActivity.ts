@@ -10,11 +10,7 @@ import {
 import { User } from './User';
 import { Post } from './Post';
 import { Comment } from './Comment';
-
-export enum ReactionType {
-  Like = 'like',
-  Dislike = 'dislike',
-}
+import { ReactionType } from 'src/types/ActivityStatus';
 
 @Entity({ name: 'comment_activities_indexes' })
 export class CommentActivity {

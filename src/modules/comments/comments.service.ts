@@ -5,10 +5,14 @@ import { Comment } from '../../models/Comment';
 import {
   CreateCommentInput,
   LikeUnlikeCommentInput,
+  ReactionType as GraphqlReactionType,
   UpdateCommentInput,
 } from '../../graphql';
 import { Post } from '../../models/Post';
 import { User } from '../../models/User';
+import { ReactionTypeCountParams } from '../posts/posts.service';
+import { CommentActivity } from '../../models/CommentActivity';
+import { ReactionType } from 'src/types/ActivityStatus';
 
 @Injectable()
 export class CommentsService {
@@ -16,6 +20,8 @@ export class CommentsService {
     @InjectRepository(Post) private postRepository: Repository<Post>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
+    @InjectRepository(CommentActivity)
+    private commentActivityRepository: Repository<CommentActivity>,
   ) {}
 
   async list(): Promise<Comment[]> {
@@ -70,6 +76,140 @@ export class CommentsService {
     }
   }
 
+  async likeUnlike(input: LikeUnlikeCommentInput) {
+    const ideticationParams = {
+      postId: input.postId,
+      userId: input.userId,
+      commentId: input.commentId,
+    };
+
+    try {
+      const post = await this.commentRepository.findOne({
+        where: {
+          id: input.commentId,
+          userId: input.userId,
+          postId: input.postId,
+        },
+      });
+
+      const reactTypeCondition =
+        input.reactionType === GraphqlReactionType.like
+          ? ReactionType.Like
+          : ReactionType.Dislike;
+
+      if (!post) {
+        throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
+      }
+
+      const commentActivity = await this.commentActivityRepository.findOne({
+        where: ideticationParams,
+      });
+
+      if (!commentActivity) {
+        const likedUnlikeComment = await this.commentActivityRepository.save({
+          ...ideticationParams,
+          reactionType: reactTypeCondition,
+        });
+
+        if (!likedUnlikeComment) {
+          throw new HttpException(
+            'Something went wrong!',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        return !!(await this.commentRepository.update(input.commentId, {
+          likeCount:
+            likedUnlikeComment.reactionType === ReactionType.Like
+              ? post.likeCount + 1
+              : post.likeCount,
+          dislikeCount:
+            likedUnlikeComment.reactionType === ReactionType.Dislike
+              ? post.dislikeCount + 1
+              : post.dislikeCount,
+        }));
+      }
+
+      if (
+        commentActivity.reactionType === ReactionType.Like &&
+        input.reactionType === GraphqlReactionType.like
+      ) {
+        return await this.likeUnlikeDuplicates(
+          commentActivity,
+          post,
+          input.commentId,
+          ReactionTypeCountParams.LikeCount,
+        );
+      }
+
+      if (
+        commentActivity.reactionType === ReactionType.Dislike &&
+        input.reactionType === GraphqlReactionType.dislike
+      ) {
+        return await this.likeUnlikeDuplicates(
+          commentActivity,
+          post,
+          input.commentId,
+          ReactionTypeCountParams.DislikeCount,
+        );
+      }
+
+      if (commentActivity) {
+        const likedUnlikePost = await this.commentActivityRepository.update(
+          ideticationParams,
+          { reactionType: reactTypeCondition },
+        );
+
+        if (!likedUnlikePost) {
+          throw new HttpException(
+            'Something went wrong!',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        return !!(await this.commentRepository.update(input.commentId, {
+          likeCount:
+            input.reactionType === GraphqlReactionType.like
+              ? post.likeCount + 1
+              : post.likeCount - 1,
+          dislikeCount:
+            input.reactionType === GraphqlReactionType.dislike
+              ? post.dislikeCount + 1
+              : post.dislikeCount - 1,
+        }));
+      }
+
+      throw new HttpException('Something went wrong!', HttpStatus.BAD_REQUEST);
+    } catch (e) {
+      return e;
+    }
+
+    return true;
+  }
+
+  async remove(id: string) {
+    try {
+      const comment = await this.single(id);
+
+      if (!comment) {
+        throw new HttpException('Not found!', HttpStatus.BAD_REQUEST);
+      }
+
+      const status = await this.commentRepository.remove(comment);
+
+      if (!status) {
+        throw new HttpException(
+          'Something went wrong!',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      return true;
+    } catch (e) {
+      return e;
+    }
+  }
+
   async existsUser(id: string) {
     return this.userRepository.exist({
       where: { id },
@@ -86,5 +226,26 @@ export class CommentsService {
     return this.commentRepository.exist({
       where: { id },
     });
+  }
+
+  async likeUnlikeDuplicates(
+    commentActivity: CommentActivity,
+    comment: Comment,
+    commentId: string,
+    reactionType: ReactionTypeCountParams,
+  ) {
+    const removeLike = await this.commentActivityRepository.remove(
+      commentActivity,
+    );
+
+    if (!removeLike) {
+      throw new HttpException('Something went wrong!', HttpStatus.BAD_REQUEST);
+    }
+
+    const status = await this.commentRepository.update(commentId, {
+      [reactionType]: comment[reactionType] - 1,
+    });
+
+    return !!status;
   }
 }

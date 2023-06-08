@@ -21,9 +21,10 @@ input UpdateCommentInput {
 }
 
 input LikeUnlikeCommentInput {
-  id: ID!
+  commentId: ID!
   postId: ID!
   userId: ID!
+  reactionType: ReactionType!
 }
 
 type Query {
@@ -35,5 +36,5 @@ type Mutation {
   createComment(input: CreateCommentInput!): Comment!
   updateComment(input: UpdateCommentInput!): Comment!
   likeUnlikeComment(input: LikeUnlikeCommentInput!): Boolean
-  removeComment(id: ID!): Comment
+  removeComment(id: ID!): Boolean
 }

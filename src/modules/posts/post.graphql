@@ -27,7 +27,7 @@ input UpdatePostInput {
 }
 
 input LikeUnlikePostInput {
-  id: ID!
+  postId: ID!
   userId: ID!
   reactionType: ReactionType!
 }
