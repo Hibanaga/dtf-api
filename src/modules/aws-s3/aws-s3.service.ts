@@ -29,7 +29,7 @@ export class AwsS3Service {
   }
 
   async uploadFile(file: Express.Multer.File, key: string) {
-    const bucket = this.configService.get<string>('S3_BUCKET_PROFILE');
+    const bucket = this.configService.get<string>('S3_BUCKET');
     const input: PutObjectCommandInput = {
       Body: file.buffer,
       Bucket: bucket,

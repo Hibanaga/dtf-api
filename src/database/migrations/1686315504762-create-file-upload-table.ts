@@ -33,10 +33,6 @@ export class CreateFileUploadTable1686315504762 implements MigrationInterface {
               name: 'image_url',
               type: 'varchar',
             },
-            {
-              name: 'bucket_type',
-              type: 'varchar',
-            },
           ],
           indices: [
             {
@@ -45,7 +41,7 @@ export class CreateFileUploadTable1686315504762 implements MigrationInterface {
             },
             {
               name: 'IDX_FILE_UPLOAD_NAMES',
-              columnNames: ['file_name', 'image_url', 'bucket_type'],
+              columnNames: ['file_name', 'image_url'],
             },
           ],
         }),

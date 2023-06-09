@@ -28,9 +28,6 @@ export class FileUpload {
   @Column({ type: 'varchar', name: 'image_url' })
   imageUrl: string;
 
-  @Column({ type: 'varchar', name: 'bucket_type' })
-  bucketType: string;
-
   @OneToMany(
     () => PostFileUpload,
     (postFileUpload) => postFileUpload.fileUpload,
