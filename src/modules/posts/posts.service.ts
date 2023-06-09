@@ -11,6 +11,7 @@ import { Post } from '../../models/Post';
 import { User } from '../../models/User';
 import { PostActivity } from '../../models/PostActivity';
 import { ReactionType } from '../../types/ActivityStatus';
+import { PaginateService } from '../../services/paginate.service';
 
 export enum ReactionTypeCountParams {
   LikeCount = 'likeCount',
@@ -24,10 +25,17 @@ export class PostsService {
     private postActivityRepository: Repository<PostActivity>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Post) private postRepository: Repository<Post>,
+    private paginateService: PaginateService,
   ) {}
 
-  async list() {
-    return await this.postRepository.find();
+  async list(args) {
+    const queryBuilder = await this.postRepository.createQueryBuilder();
+    const meta = await this.paginateService.paginate(queryBuilder, args);
+
+    return {
+      edges: await queryBuilder.getMany(),
+      pageInfo: meta,
+    };
   }
 
   async single(id: string) {

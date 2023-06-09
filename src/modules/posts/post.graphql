@@ -13,6 +13,26 @@ type Post {
   comments: [Comment]!
 }
 
+type PaginationParams {
+  total: Int
+  page: Int
+  perPage: Int
+  lastPage: Int
+  hasMorePages: Boolean
+}
+
+type PostsReponse {
+  edges: [Post]!
+  pageInfo: PaginationParams
+}
+
+input PostArguments {
+     totalCount: Int
+     page: Int
+     perPage: Int
+     lastPage: Int
+}
+
 input CreatePostInput {
   userId: ID!
   title: String!
@@ -33,7 +53,7 @@ input LikeUnlikePostInput {
 }
 
 type Query {
-  posts: [Post]!
+  posts(input: PostArguments): PostsReponse!
   post(id: ID!): Post
 }
 

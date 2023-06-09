@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from '../../models/Post';
 import { User } from '../../models/User';
 import { PostActivity } from '../../models/PostActivity';
+import { PaginateService } from '../../services/paginate.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Post, PostActivity])],
-  providers: [PostsResolver, PostsService],
+  providers: [PaginateService, PostsResolver, PostsService],
 })
 export class PostsModule {}

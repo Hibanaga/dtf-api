@@ -8,10 +8,16 @@ import {
 import { UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from '../../authentication/guard/access-token.guard';
 import { Post } from '../../models/Post';
+import { PaginationParams } from '../../types/Pagination';
 
 @Resolver('Post')
 export class PostsResolver {
   constructor(private readonly postsService: PostsService) {}
+
+  @Query('posts')
+  async list(@Args('input') args): Promise<PaginationParams<Post>> {
+    return await this.postsService.list(args);
+  }
 
   @Mutation('createPost')
   async create(@Args('input') input: CreatePostInput): Promise<Post> {
@@ -28,11 +34,6 @@ export class PostsResolver {
     @Args('input') input: LikeUnlikePostInput,
   ): Promise<boolean> {
     return await this.postsService.likeUnlike(input);
-  }
-
-  @Query('posts')
-  async list(): Promise<Post[]> {
-    return await this.postsService.list();
   }
 
   @Query('post')
