@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { User } from './User';
 import { PostFileUpload } from './PostFileUpload';
+import { UserFileUpload } from './UserFileUpload';
 
 @Entity({ name: 'file_uploads' })
 export class FileUpload {
@@ -34,14 +35,19 @@ export class FileUpload {
     () => PostFileUpload,
     (postFileUpload) => postFileUpload.fileUpload,
     {
+      cascade: true,
       eager: true,
     },
   )
   postFilesUpload: PostFileUpload[];
 
-  @OneToOne(() => User, (user) => user.fileUpload, {
-    cascade: true,
-    eager: true,
-  })
-  user: User;
+  @OneToMany(
+    () => UserFileUpload,
+    (userFileUpload) => userFileUpload.fileUpload,
+    {
+      cascade: true,
+      eager: true,
+    },
+  )
+  userFilesUpload: UserFileUpload[];
 }

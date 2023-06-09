@@ -73,41 +73,11 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
           ],
         }),
       );
-
-      await queryRunner.addColumn(
-        'users',
-        new TableColumn({
-          name: 'upload_file_id',
-          type: 'uuid',
-          isNullable: true,
-        }),
-      );
-
-      if (await queryRunner.hasTable('file_uploads')) {
-        await queryRunner.createForeignKey(
-          'users',
-          new TableForeignKey({
-            columnNames: ['upload_file_id'],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'file_uploads',
-          }),
-        );
-      }
     }
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     if (await queryRunner.hasTable('users')) {
-      const table = await queryRunner.getTable('users');
-
-      const uploadFileForeignKey = table.foreignKeys.find((fk) =>
-        fk.columnNames.includes('upload_file_id'),
-      );
-
-      if (uploadFileForeignKey) {
-        await queryRunner.dropForeignKey('users', uploadFileForeignKey);
-      }
-
       await queryRunner.dropTable('users');
     }
   }

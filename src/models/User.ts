@@ -5,6 +5,7 @@ import {
   Index,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -13,6 +14,7 @@ import { Comment } from './Comment';
 import { PostActivity } from './PostActivity';
 import { CommentActivity } from './CommentActivity';
 import { FileUpload } from './FileUpload';
+import { UserFileUpload } from './UserFileUpload';
 
 export enum Gender {
   Men = 'men',
@@ -54,9 +56,8 @@ export class User {
   @Column({ type: 'varchar', name: 'gender', nullable: true })
   gender?: Gender;
 
-  @ManyToOne(() => FileUpload, (fileUpload) => fileUpload.user)
-  @Column({ type: 'uuid', name: 'upload_file_id', nullable: true })
-  fileUpload?: FileUpload;
+  @OneToMany(() => UserFileUpload, (userFileUpload) => userFileUpload.user)
+  userFilesUpload: UserFileUpload[];
 
   @OneToMany(() => Post, (post) => post.user, {
     cascade: true,
