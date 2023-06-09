@@ -12,9 +12,9 @@ import { Post } from '../../models/Post';
 import { User } from '../../models/User';
 import { ReactionTypeCountParams } from '../posts/posts.service';
 import { CommentActivity } from '../../models/CommentActivity';
-import { ReactionType } from 'src/types/ActivityStatus';
 import { PaginationParams } from '../../types/Pagination';
 import { PaginateService } from '../../services/paginate.service';
+import { ReactionType } from '../../types/ActivityStatus';
 
 @Injectable()
 export class CommentsService {

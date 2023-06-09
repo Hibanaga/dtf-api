@@ -1,7 +1,6 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -13,6 +12,7 @@ import { User } from './User';
 import { Comment } from './Comment';
 import { PostActivity } from './PostActivity';
 import { CommentActivity } from './CommentActivity';
+import { PostFileUpload } from './PostFileUpload';
 
 @Entity({ name: 'posts' })
 export class Post {
@@ -24,9 +24,6 @@ export class Post {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-
-  @Column({ type: 'varchar', name: 'image_key', nullable: true })
-  imageKey?: string;
 
   @Column({ type: 'integer', default: 0, name: 'like_count' })
   likeCount: number;
@@ -63,4 +60,10 @@ export class Post {
     eager: true,
   })
   commentActivities: CommentActivity[];
+
+  @OneToMany(() => PostFileUpload, (postFileUpload) => postFileUpload.post, {
+    cascade: true,
+    eager: true,
+  })
+  postFilesUpload: PostFileUpload[];
 }

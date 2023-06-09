@@ -1,17 +1,15 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   JoinColumn,
 } from 'typeorm';
 import { User } from './User';
 import { Post } from './Post';
-import { ReactionType } from 'src/types/ActivityStatus';
+import { ReactionType } from '../types/ActivityStatus';
 
 @Entity({ name: 'post_activities_indexes' })
 export class PostActivity {

@@ -10,6 +10,7 @@ import { UsersModule } from './modules/users/users.module';
 import typeormCliConfig from '../typeorm-cli.config';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { CommentsModule } from './modules/comments/comments.module';
+import { AwsS3Module } from './modules/aws-s3/aws-s3.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { CommentsModule } from './modules/comments/comments.module';
     CommentsModule,
     PostsModule,
     UsersModule,
+    AwsS3Module,
   ],
   controllers: [],
   providers: [],

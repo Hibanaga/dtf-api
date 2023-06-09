@@ -1,9 +1,9 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   Index,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -12,6 +12,7 @@ import { Post } from './Post';
 import { Comment } from './Comment';
 import { PostActivity } from './PostActivity';
 import { CommentActivity } from './CommentActivity';
+import { FileUpload } from './FileUpload';
 
 export enum Gender {
   Men = 'men',
@@ -50,11 +51,12 @@ export class User {
   @Column({ type: 'varchar', name: 'last_name', nullable: true })
   lastName?: string;
 
-  @Column({ type: 'varchar', name: 'image_key', nullable: true })
-  imageKey?: string;
-
   @Column({ type: 'varchar', name: 'gender', nullable: true })
   gender?: Gender;
+
+  @ManyToOne(() => FileUpload, (fileUpload) => fileUpload.user)
+  @Column({ type: 'uuid', name: 'upload_file_id', nullable: true })
+  fileUpload?: FileUpload;
 
   @OneToMany(() => Post, (post) => post.user, {
     cascade: true,

@@ -5,14 +5,15 @@ import {
   TableColumn,
   TableForeignKey,
 } from 'typeorm';
-import { Gender } from '../../models/User';
 
-export class CreateTableUser1685263615500 implements MigrationInterface {
+export class CreatePostFileUploadIndexesTable1686315511270
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
-    if (!(await queryRunner.hasTable('users'))) {
+    if (!(await queryRunner.hasTable('post_file_uploads_indexes'))) {
       await queryRunner.createTable(
         new Table({
-          name: 'users',
+          name: 'post_file_uploads_indexes',
           columns: [
             {
               name: 'id',
@@ -21,34 +22,6 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
               isGenerated: true,
               generationStrategy: 'uuid',
               isNullable: false,
-            },
-            {
-              name: 'email',
-              type: 'varchar',
-            },
-            {
-              name: 'password',
-              type: 'varchar',
-            },
-            {
-              name: 'user_name',
-              type: 'varchar',
-            },
-            {
-              name: 'first_name',
-              type: 'varchar',
-              isNullable: true,
-            },
-            {
-              name: 'last_name',
-              type: 'varchar',
-              isNullable: true,
-            },
-            {
-              name: 'gender',
-              type: 'enum',
-              enum: [...Object.values(Gender)],
-              isNullable: true,
             },
             {
               name: 'created_at',
@@ -63,19 +36,33 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
           ],
           indices: [
             {
-              name: 'IDX_USER_IDs',
+              name: 'IDX_POST_FILE_UPLOAD_IDs',
               columnNames: ['id'],
-            },
-            {
-              name: 'IDX_USER_NAMES',
-              columnNames: ['email', 'user_name', 'first_name', 'last_name'],
             },
           ],
         }),
       );
 
       await queryRunner.addColumn(
-        'users',
+        'post_file_uploads_indexes',
+        new TableColumn({
+          name: 'post_id',
+          type: 'uuid',
+        }),
+      );
+
+      await queryRunner.createForeignKey(
+        'post_file_uploads_indexes',
+        new TableForeignKey({
+          columnNames: ['post_id'],
+          referencedColumnNames: ['id'],
+          referencedTableName: 'posts',
+          onDelete: 'CASCADE',
+        }),
+      );
+
+      await queryRunner.addColumn(
+        'post_file_uploads_indexes',
         new TableColumn({
           name: 'upload_file_id',
           type: 'uuid',
@@ -85,11 +72,12 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
 
       if (await queryRunner.hasTable('file_uploads')) {
         await queryRunner.createForeignKey(
-          'users',
+          'post_file_uploads_indexes',
           new TableForeignKey({
             columnNames: ['upload_file_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'file_uploads',
+            onDelete: 'CASCADE',
           }),
         );
       }
@@ -97,18 +85,31 @@ export class CreateTableUser1685263615500 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    if (await queryRunner.hasTable('users')) {
-      const table = await queryRunner.getTable('users');
+    if (await queryRunner.hasTable('post_file_uploads_indexes')) {
+      const table = await queryRunner.getTable('post_file_uploads_indexes');
 
       const uploadFileForeignKey = table.foreignKeys.find((fk) =>
         fk.columnNames.includes('upload_file_id'),
       );
+      const postForeignKey = table.foreignKeys.find((fk) =>
+        fk.columnNames.includes('post_id'),
+      );
 
       if (uploadFileForeignKey) {
-        await queryRunner.dropForeignKey('users', uploadFileForeignKey);
+        await queryRunner.dropForeignKey(
+          'post_file_uploads_indexes',
+          uploadFileForeignKey,
+        );
       }
 
-      await queryRunner.dropTable('users');
+      if (postForeignKey) {
+        await queryRunner.dropForeignKey(
+          'post_file_uploads_indexes',
+          postForeignKey,
+        );
+      }
+
+      await queryRunner.dropTable('post_file_uploads_indexes');
     }
   }
 }

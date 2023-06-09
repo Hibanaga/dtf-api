@@ -33,11 +33,6 @@ export class CreatePostsTable1685267699325 implements MigrationInterface {
               default: 0,
             },
             {
-              name: 'image_key',
-              type: 'varchar',
-              isNullable: true,
-            },
-            {
               name: 'title',
               type: 'varchar',
               isNullable: true,

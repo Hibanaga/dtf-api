@@ -10,7 +10,7 @@ import {
 import { User } from './User';
 import { Post } from './Post';
 import { Comment } from './Comment';
-import { ReactionType } from 'src/types/ActivityStatus';
+import { ReactionType } from '../types/ActivityStatus';
 
 @Entity({ name: 'comment_activities_indexes' })
 export class CommentActivity {
