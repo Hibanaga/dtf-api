@@ -6,14 +6,15 @@ import {
   UpdateCommentInput,
 } from '../../graphql';
 import { Comment } from '../../models/Comment';
+import { PaginationParams } from '../../types/Pagination';
 
 @Resolver('Comment')
 export class CommentsResolver {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Query('comments')
-  async list(): Promise<Comment[]> {
-    return await this.commentsService.list();
+  async list(@Args('input') input): Promise<PaginationParams<Comment>> {
+    return await this.commentsService.list(input);
   }
 
   @Query('comment')

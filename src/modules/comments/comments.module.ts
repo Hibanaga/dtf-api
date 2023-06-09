@@ -6,9 +6,10 @@ import { User } from '../../models/User';
 import { Post } from '../../models/Post';
 import { Comment } from '../../models/Comment';
 import { CommentActivity } from '../../models/CommentActivity';
+import { PaginateService } from '../../services/paginate.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Post, Comment, CommentActivity])],
-  providers: [CommentsResolver, CommentsService],
+  providers: [PaginateService, CommentsResolver, CommentsService],
 })
 export class CommentsModule {}

@@ -7,6 +7,18 @@ type Comment {
   dislikeCount: Int
 }
 
+type CommentsReponse {
+  edges: [Comment]!
+  pageInfo: PaginationParams
+}
+
+input CommentArguments {
+     totalCount: Int
+     page: Int
+     perPage: Int
+     lastPage: Int
+}
+
 input CreateCommentInput {
   userId: ID!
   postId: ID
@@ -28,7 +40,7 @@ input LikeUnlikeCommentInput {
 }
 
 type Query {
-  comments: [Comment]!
+  comments(input: CommentArguments): CommentsReponse!
   comment(id: ID!): Comment
 }
 
