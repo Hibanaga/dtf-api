@@ -6,6 +6,12 @@ enum Gender {
 
 scalar DateTime
 
+type UserFileUploads {
+  id: ID!
+  userId: ID
+  uploadFileId: ID
+}
+
 type User {
   id: ID!
   createdAt: DateTime
@@ -18,8 +24,9 @@ type User {
   lastName: String
   imageKey: String
   gender: Gender
-  comments: [Comment]!
-  posts: [Post]!
+  fileUploads: [UserFileUploads!]!
+  comments: [Comment!]!
+  posts: [Post!]!
 }
 
 type JWTTokens {
@@ -33,7 +40,7 @@ input RegisterInput {
     userName: String!
     firstName: String
     lastName: String
-    imageKey: String
+    fileUploadId: String
     gender: Gender
 }
 

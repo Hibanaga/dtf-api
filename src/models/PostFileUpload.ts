@@ -1,10 +1,10 @@
 import {
+  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { Post } from './Post';
 import { FileUpload } from './FileUpload';
@@ -17,8 +17,11 @@ export class PostFileUpload {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  @Column({ type: 'uuid', name: 'post_id' })
+  postId: string;
+
+  @Column({ type: 'uuid', name: 'upload_file_id' })
+  uploadFileId: string;
 
   @ManyToOne(() => Post, (post) => post.postFilesUpload, {
     onDelete: 'CASCADE',

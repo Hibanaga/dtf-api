@@ -56,9 +56,6 @@ export class User {
   @Column({ type: 'varchar', name: 'gender', nullable: true })
   gender?: Gender;
 
-  @OneToMany(() => UserFileUpload, (userFileUpload) => userFileUpload.user)
-  userFilesUpload: UserFileUpload[];
-
   @OneToMany(() => Post, (post) => post.user, {
     cascade: true,
     eager: true,
@@ -82,4 +79,7 @@ export class User {
     eager: true,
   })
   commentActivities: CommentActivity[];
+
+  @OneToMany(() => UserFileUpload, (userFileUpload) => userFileUpload.user)
+  userFilesUpload: UserFileUpload[];
 }

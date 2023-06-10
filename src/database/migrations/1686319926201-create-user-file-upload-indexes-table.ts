@@ -28,11 +28,6 @@ export class CreateUserFileUploadIndexesTable1686319926201
               type: 'timestamp',
               default: 'CURRENT_TIMESTAMP',
             },
-            {
-              name: 'updated_at',
-              type: 'timestamp',
-              default: 'CURRENT_TIMESTAMP',
-            },
           ],
           indices: [
             {

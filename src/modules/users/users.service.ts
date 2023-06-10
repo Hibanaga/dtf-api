@@ -8,11 +8,14 @@ import { ConfigService } from '@nestjs/config';
 import { hashPassword } from '../../utils/password';
 import { invalidateFalsy } from '../../utils/object';
 import { compare } from 'bcrypt';
+import { UserFileUpload } from '../../models/UserFileUpload';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(UserFileUpload)
+    private userFileUploadRepository: Repository<UserFileUpload>,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -36,10 +39,18 @@ export class UsersService {
     const body = {
       ...input,
       password: protectedPassword,
-      imageKey: null,
     };
 
-    return await this.userRepository.save(invalidateFalsy(body));
+    const newUser = await this.userRepository.save(invalidateFalsy(body));
+
+    if (input?.fileUploadId && newUser.id) {
+      await this.userFileUploadRepository.save({
+        userId: newUser.id,
+        uploadFileId: input.fileUploadId,
+      });
+    }
+
+    return newUser;
   }
 
   async login(input: SignInInput) {
