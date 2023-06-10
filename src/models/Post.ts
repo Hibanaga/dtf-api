@@ -37,7 +37,7 @@ export class Post {
   @Column({ type: 'uuid', nullable: true, name: 'user_id' })
   userId: string;
 
-  @OneToMany(() => Comment, (comment) => comment.user, {
+  @OneToMany(() => Comment, (comment) => comment.post, {
     cascade: true,
     eager: false,
   })

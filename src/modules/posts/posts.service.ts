@@ -12,6 +12,7 @@ import { User } from '../../models/User';
 import { PostActivity } from '../../models/PostActivity';
 import { ReactionType } from '../../types/ActivityStatus';
 import { PaginateService } from '../../services/paginate.service';
+import { NestedObject } from '../../types/Options';
 
 export enum ReactionTypeCountParams {
   LikeCount = 'likeCount',
@@ -25,17 +26,11 @@ export class PostsService {
     private postActivityRepository: Repository<PostActivity>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Post) private postRepository: Repository<Post>,
-    private paginateService: PaginateService,
+    private paginateService: PaginateService<Post>,
   ) {}
 
-  async list(args) {
-    const queryBuilder = await this.postRepository.createQueryBuilder();
-    const meta = await this.paginateService.paginate(queryBuilder, args);
-
-    return {
-      edges: await queryBuilder.getMany(),
-      pageInfo: meta,
-    };
+  async list(args, keys: NestedObject) {
+    return await this.paginateService.paginate(this.postRepository, keys, args);
   }
 
   async single(id: string) {

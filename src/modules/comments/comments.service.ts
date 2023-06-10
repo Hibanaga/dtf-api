@@ -12,7 +12,7 @@ import { Post } from '../../models/Post';
 import { User } from '../../models/User';
 import { ReactionTypeCountParams } from '../posts/posts.service';
 import { CommentActivity } from '../../models/CommentActivity';
-import { PaginationParams } from '../../types/Options';
+import { NestedObject, PaginationParams } from '../../types/Options';
 import { PaginateService } from '../../services/paginate.service';
 import { ReactionType } from '../../types/ActivityStatus';
 
@@ -24,17 +24,15 @@ export class CommentsService {
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
     @InjectRepository(CommentActivity)
     private commentActivityRepository: Repository<CommentActivity>,
-    private paginateService: PaginateService,
+    private paginateService: PaginateService<Comment>,
   ) {}
 
-  async list(args): Promise<PaginationParams<Comment>> {
-    const queryBuilder = await this.commentRepository.createQueryBuilder();
-    const meta = await this.paginateService.paginate(queryBuilder, args);
-
-    return {
-      edges: await queryBuilder.getMany(),
-      pageInfo: meta,
-    };
+  async list(args, keys: NestedObject): Promise<PaginationParams<Comment>> {
+    return await this.paginateService.paginate(
+      this.commentRepository,
+      keys,
+      args,
+    );
   }
 
   async single(id: string): Promise<Comment> {

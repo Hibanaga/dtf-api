@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CommentsService } from './comments.service';
 import {
   CreateCommentInput,
@@ -6,15 +6,20 @@ import {
   UpdateCommentInput,
 } from '../../graphql';
 import { Comment } from '../../models/Comment';
-import { PaginationParams } from '../../types/Options';
+import { NestedObject, PaginationParams } from '../../types/Options';
+import { FieldNode, GraphQLResolveInfo } from 'graphql';
 
 @Resolver('Comment')
 export class CommentsResolver {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Query('comments')
-  async list(@Args('input') input): Promise<PaginationParams<Comment>> {
-    return await this.commentsService.list(input);
+  async list(
+    @Args('input') input,
+    @Info() info: GraphQLResolveInfo,
+  ): Promise<PaginationParams<Comment>> {
+    const requestedFields = this.getRequestedFields(info.fieldNodes[0]);
+    return await this.commentsService.list(input, requestedFields);
   }
 
   @Query('comment')
@@ -42,5 +47,25 @@ export class CommentsResolver {
     @Args('input') input: LikeUnlikeCommentInput,
   ): Promise<boolean> {
     return await this.commentsService.likeUnlike(input);
+  }
+
+  private getRequestedFields(selection: FieldNode): NestedObject {
+    if (selection.selectionSet) {
+      return selection.selectionSet.selections.reduce(
+        (fields: any, subSelection: any) => {
+          if (subSelection.name && subSelection.name.value) {
+            if (subSelection.selectionSet) {
+              fields[subSelection.name.value] =
+                this.getRequestedFields(subSelection);
+            } else {
+              fields[subSelection.name.value] = true;
+            }
+          }
+          return fields;
+        },
+        {},
+      );
+    }
+    return {};
   }
 }
