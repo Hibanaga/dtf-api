@@ -33,7 +33,7 @@ export class FileUpload {
     (postFileUpload) => postFileUpload.fileUpload,
     {
       cascade: true,
-      eager: true,
+      eager: false,
     },
   )
   postFilesUpload: PostFileUpload[];
@@ -43,7 +43,7 @@ export class FileUpload {
     (userFileUpload) => userFileUpload.fileUpload,
     {
       cascade: true,
-      eager: true,
+      eager: false,
     },
   )
   userFilesUpload: UserFileUpload[];

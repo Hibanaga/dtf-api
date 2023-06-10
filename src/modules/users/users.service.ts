@@ -2,13 +2,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JWTTokens, RegisterInput, SignInInput } from 'src/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../models/User';
-import { Repository } from 'typeorm';
+import { Equal, In, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { hashPassword } from '../../utils/password';
-import { invalidateFalsy } from '../../utils/object';
+import { getNestedFields, invalidateFalsy } from '../../utils/object';
 import { compare } from 'bcrypt';
 import { UserFileUpload } from '../../models/UserFileUpload';
+import { FileUpload } from '../../models/FileUpload';
 
 @Injectable()
 export class UsersService {
@@ -16,6 +17,8 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(UserFileUpload)
     private userFileUploadRepository: Repository<UserFileUpload>,
+    @InjectRepository(FileUpload)
+    private fileUploadRepository: Repository<FileUpload>,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -71,10 +74,37 @@ export class UsersService {
     return this.getTokens(user);
   }
 
-  async single(id: string) {
-    return await this.userRepository.findOne({
-      where: { id: id },
+  async single(id: string, keys: { [key: string]: any }) {
+    const { fileUploads, ...otherGraphQLParams } = keys;
+    const nestedFields = getNestedFields(otherGraphQLParams);
+
+    let response = {};
+
+    const singleElement = await this.userRepository.findOne({
+      select: otherGraphQLParams,
+      where: { id },
+      relations: {
+        ...nestedFields,
+        userFilesUpload: !!fileUploads,
+      },
     });
+
+    if (fileUploads) {
+      const uploadFilesIds = singleElement.userFilesUpload.map(
+        (element) => element.uploadFileId,
+      );
+
+      const uploadFiles = await this.fileUploadRepository.find({
+        select: fileUploads,
+        where: { id: In(uploadFilesIds) },
+      });
+
+      response = { ...response, ...singleElement, fileUploads: uploadFiles };
+    } else {
+      response = { ...response, ...singleElement };
+    }
+
+    return response;
   }
 
   async getTokens(user: User): Promise<JWTTokens> {

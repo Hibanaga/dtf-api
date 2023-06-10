@@ -7,6 +7,20 @@ export function invalidateFalsy(object: any): any {
   return { ...Object.fromEntries(invalidatedArrayEntries) };
 }
 
+export function getNestedFields(fields: { [key: string]: any }): {
+  [key: string]: any;
+} {
+  const nestedFields: { [key: string]: boolean } = {};
+
+  for (const [key, value] of Object.entries(fields)) {
+    if (typeof value === 'object' && value !== null) {
+      nestedFields[key] = true;
+    }
+  }
+
+  return nestedFields;
+}
+
 export const caseTransformer = (
   object: any,
   callback: (key: string) => string,

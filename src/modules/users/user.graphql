@@ -6,10 +6,13 @@ enum Gender {
 
 scalar DateTime
 
-type UserFileUploads {
+type FileUploads {
   id: ID!
-  userId: ID
-  uploadFileId: ID
+  createdAt: String
+  fileName: String
+  imageUrl: String
+  mimeType: String
+  originalName: String
 }
 
 type User {
@@ -24,7 +27,7 @@ type User {
   lastName: String
   imageKey: String
   gender: Gender
-  fileUploads: [UserFileUploads!]!
+  fileUploads: [FileUploads!]!
   comments: [Comment!]!
   posts: [Post!]!
 }

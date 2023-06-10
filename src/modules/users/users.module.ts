@@ -6,10 +6,11 @@ import { User } from '../../models/User';
 import { JwtModule } from '@nestjs/jwt';
 import { AccessTokenStrategy } from '../../authentication/passport-strategy/access-token.strategy';
 import { UserFileUpload } from '../../models/UserFileUpload';
+import { FileUpload } from '../../models/FileUpload';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, UserFileUpload]),
+    TypeOrmModule.forFeature([User, UserFileUpload, FileUpload]),
     JwtModule.register({}),
   ],
   providers: [UsersResolver, UsersService, AccessTokenStrategy],

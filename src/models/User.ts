@@ -58,28 +58,31 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.user, {
     cascade: true,
-    eager: true,
+    eager: false,
   })
   posts: Post[];
 
   @OneToMany(() => Comment, (comment) => comment.user, {
     cascade: true,
-    eager: true,
+    eager: false,
   })
   comments: Comment[];
 
   @OneToMany(() => PostActivity, (postActivity) => postActivity.user, {
     cascade: true,
-    eager: true,
+    eager: false,
   })
   postActivities: PostActivity[];
 
   @OneToMany(() => CommentActivity, (commentActivity) => commentActivity.user, {
     cascade: true,
-    eager: true,
+    eager: false,
   })
   commentActivities: CommentActivity[];
 
-  @OneToMany(() => UserFileUpload, (userFileUpload) => userFileUpload.user)
+  @OneToMany(() => UserFileUpload, (userFileUpload) => userFileUpload.user, {
+    cascade: true,
+    eager: false,
+  })
   userFilesUpload: UserFileUpload[];
 }

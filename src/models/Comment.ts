@@ -55,7 +55,7 @@ export class Comment {
     (commentActivity) => commentActivity.comment,
     {
       cascade: true,
-      eager: true,
+      eager: false,
     },
   )
   commentActivities: CommentActivity[];

@@ -39,7 +39,7 @@ export class Post {
 
   @OneToMany(() => Comment, (comment) => comment.user, {
     cascade: true,
-    eager: true,
+    eager: false,
   })
   comments: Comment[];
 
@@ -51,19 +51,19 @@ export class Post {
 
   @OneToMany(() => PostActivity, (postActivity) => postActivity.post, {
     cascade: true,
-    eager: true,
+    eager: false,
   })
   postActivities: PostActivity[];
 
   @OneToMany(() => CommentActivity, (commentActivity) => commentActivity.post, {
     cascade: true,
-    eager: true,
+    eager: false,
   })
   commentActivities: CommentActivity[];
 
   @OneToMany(() => PostFileUpload, (postFileUpload) => postFileUpload.post, {
     cascade: true,
-    eager: true,
+    eager: false,
   })
   postFilesUpload: PostFileUpload[];
 }
