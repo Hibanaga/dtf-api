@@ -1,3 +1,5 @@
+import { NestedObject } from '../types/Options';
+
 export function invalidateFalsy(object: any): any {
   if (typeof object !== 'object' && object === null) return {};
 
@@ -7,10 +9,8 @@ export function invalidateFalsy(object: any): any {
   return { ...Object.fromEntries(invalidatedArrayEntries) };
 }
 
-export function getNestedFields(fields: { [key: string]: any }): {
-  [key: string]: any;
-} {
-  const nestedFields: { [key: string]: boolean } = {};
+export function getNestedFields(fields: NestedObject): NestedObject {
+  const nestedFields: NestedObject = {};
 
   for (const [key, value] of Object.entries(fields)) {
     if (typeof value === 'object' && value !== null) {

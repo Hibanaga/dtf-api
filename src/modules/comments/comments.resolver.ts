@@ -6,7 +6,7 @@ import {
   UpdateCommentInput,
 } from '../../graphql';
 import { Comment } from '../../models/Comment';
-import { PaginationParams } from '../../types/Pagination';
+import { PaginationParams } from '../../types/Options';
 
 @Resolver('Comment')
 export class CommentsResolver {

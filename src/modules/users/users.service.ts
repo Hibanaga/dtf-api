@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JWTTokens, RegisterInput, SignInInput } from 'src/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../models/User';
-import { Equal, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { hashPassword } from '../../utils/password';
@@ -10,6 +10,7 @@ import { getNestedFields, invalidateFalsy } from '../../utils/object';
 import { compare } from 'bcrypt';
 import { UserFileUpload } from '../../models/UserFileUpload';
 import { FileUpload } from '../../models/FileUpload';
+import { NestedObject } from '../../types/Options';
 
 @Injectable()
 export class UsersService {
@@ -74,7 +75,7 @@ export class UsersService {
     return this.getTokens(user);
   }
 
-  async single(id: string, keys: { [key: string]: any }) {
+  async single(id: string, keys: NestedObject) {
     const { fileUploads, ...otherGraphQLParams } = keys;
     const nestedFields = getNestedFields(otherGraphQLParams);
 
@@ -99,9 +100,9 @@ export class UsersService {
         where: { id: In(uploadFilesIds) },
       });
 
-      response = { ...response, ...singleElement, fileUploads: uploadFiles };
+      response = { ...singleElement, fileUploads: uploadFiles };
     } else {
-      response = { ...response, ...singleElement };
+      response = singleElement;
     }
 
     return response;

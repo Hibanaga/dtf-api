@@ -2,6 +2,7 @@ import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { RegisterInput, SignInInput } from 'src/graphql';
 import { FieldNode, GraphQLResolveInfo } from 'graphql';
+import { NestedObject } from '../../types/Options';
 
 @Resolver('User')
 export class UsersResolver {
@@ -24,9 +25,7 @@ export class UsersResolver {
     return this.userService.single(id, requestedFields);
   }
 
-  private getRequestedFields(selection: FieldNode): {
-    [key: string]: any;
-  } {
+  private getRequestedFields(selection: FieldNode): NestedObject {
     if (selection.selectionSet) {
       return selection.selectionSet.selections.reduce(
         (fields: any, subSelection: any) => {

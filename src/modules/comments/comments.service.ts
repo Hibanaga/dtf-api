@@ -12,7 +12,7 @@ import { Post } from '../../models/Post';
 import { User } from '../../models/User';
 import { ReactionTypeCountParams } from '../posts/posts.service';
 import { CommentActivity } from '../../models/CommentActivity';
-import { PaginationParams } from '../../types/Pagination';
+import { PaginationParams } from '../../types/Options';
 import { PaginateService } from '../../services/paginate.service';
 import { ReactionType } from '../../types/ActivityStatus';
 

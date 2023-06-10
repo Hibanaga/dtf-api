@@ -8,7 +8,7 @@ import {
 import { UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from '../../authentication/guard/access-token.guard';
 import { Post } from '../../models/Post';
-import { PaginationParams } from '../../types/Pagination';
+import { PaginationParams } from '../../types/Options';
 
 @Resolver('Post')
 export class PostsResolver {

@@ -8,3 +8,5 @@ export interface PaginationParams<T> {
     hasMorePages?: boolean;
   };
 }
+
+export type NestedObject = { [key: string]: any };
