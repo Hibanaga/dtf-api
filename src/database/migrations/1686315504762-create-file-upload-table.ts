@@ -21,16 +21,19 @@ export class CreateFileUploadTable1686315504762 implements MigrationInterface {
               default: 'CURRENT_TIMESTAMP',
             },
             {
-              name: 'updated_at',
-              type: 'timestamp',
-              default: 'CURRENT_TIMESTAMP',
-            },
-            {
               name: 'file_name',
               type: 'varchar',
             },
             {
               name: 'image_url',
+              type: 'varchar',
+            },
+            {
+              name: 'mime_type',
+              type: 'varchar',
+            },
+            {
+              name: 'original_name',
               type: 'varchar',
             },
           ],

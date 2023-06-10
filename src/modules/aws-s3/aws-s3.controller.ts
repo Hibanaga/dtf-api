@@ -1,8 +1,8 @@
 import {
   Controller,
+  Delete,
   Param,
-  ParseUUIDPipe,
-  Patch,
+  Post,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -15,8 +15,13 @@ export class AwsS3Controller {
   constructor(private readonly awsS3Service: AwsS3Service) {}
 
   @UseInterceptors(FileInterceptor('image'))
-  @Patch('/presign-image')
+  @Post('/presign-image')
   async uploadImage(@UploadedFile() file: Express.Multer.File) {
     return await this.awsS3Service.uploadFile(file, uuidv4());
+  }
+
+  @Delete('/presign-image/:id')
+  async removeImage(@Param('id') id: string) {
+    return this.awsS3Service.removeImage(id);
   }
 }

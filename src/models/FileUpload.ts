@@ -3,11 +3,8 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
-import { User } from './User';
 import { PostFileUpload } from './PostFileUpload';
 import { UserFileUpload } from './UserFileUpload';
 
@@ -19,14 +16,17 @@ export class FileUpload {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
   @Column({ type: 'varchar', name: 'file_name' })
   fileName: string;
 
   @Column({ type: 'varchar', name: 'image_url' })
   imageUrl: string;
+
+  @Column({ type: 'varchar', name: 'mime_type' })
+  mimeType: string;
+
+  @Column({ type: 'varchar', name: 'original_name' })
+  originalName: string;
 
   @OneToMany(
     () => PostFileUpload,
